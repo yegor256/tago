@@ -30,6 +30,7 @@ require 'time'
 class Time
   def ago
     s = Time.now - self
+    s = -s if s.negative?
     if s < 0.001
       format('%dμs', s * 1000 * 1000)
     elsif s < 1
