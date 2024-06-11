@@ -1,4 +1,4 @@
-# Adds `.ago()` Method to `Time` Class
+# Adds `.ago()` Method to the `Time` Class
 
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/tago)](http://www.rultor.com/p/yegor256/tago)
 [![We recommend RubyMine](https://www.elegantobjects.org/rubymine.svg)](https://www.jetbrains.com/ruby/)
@@ -15,7 +15,7 @@ Here is how you use it:
 
 ```ruby
 start = Time.now
-# something
+# something long
 puts "It took #{start.ago} to do it"
 ```
 

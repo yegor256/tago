@@ -28,8 +28,8 @@ require 'time'
 # Copyright:: Copyright (c) 2024 Yegor Bugayenko
 # License:: MIT
 class Time
-  def ago
-    s = Time.now - self
+  def ago(now = Time.now)
+    s = now - self
     s = -s if s.negative?
     if s < 0.001
       format('%dμs', s * 1000 * 1000)
