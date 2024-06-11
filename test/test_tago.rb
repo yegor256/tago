@@ -32,5 +32,9 @@ class TestTago < Minitest::Test
     t = Time.now
     assert_equal('14ms', (t - 0.014).ago)
     assert_equal('1.0s', (t - 1).ago)
+    assert_equal('1.1m', (t - 67).ago)
+    assert_equal('13.0h', (t - (13 * 60 * 60)).ago)
+    assert_equal('5.0d', (t - (5 * 24 * 60 * 60)).ago)
+    assert_equal('22.1w', (t - (155 * 24 * 60 * 60)).ago)
   end
 end
