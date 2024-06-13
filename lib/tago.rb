@@ -36,17 +36,22 @@ class Time
     elsif s < 1
       format('%dms', s * 1000)
     elsif s < 10
-      format('%.2fs', s)
+      ms = format('%03d', s * 1000 % 1000)
+      if ms == '000'
+        format('%ds', s)
+      else
+        format('%<sec>ds%<msec>sms', sec: s, msec: ms)
+      end
     elsif s < 100
       format('%ds', s)
     elsif s < 60 * 60
-      format('%.1fm', s / 60)
+      format('%<mins>dm%<secs>ds', mins: s / 60, secs: s % 60)
     elsif s < 24 * 60 * 60
-      format('%.1fh', s / (60 * 60))
+      format('%<hours>dh%<mins>dm', hours: s / (60 * 60), mins: (s % (60 * 60)) / 60)
     elsif s < 7 * 24 * 60 * 60
-      format('%.1fd', s / (24 * 60 * 60))
+      format('%<days>dd%<hours>dh', days: s / (24 * 60 * 60), hours: (s % (24 * 60 * 60)) / (60 * 60))
     else
-      format('%.1fw', s / (7 * 24 * 60 * 60))
+      format('%<weeks>dw%<days>dd', weeks: s / (7 * 24 * 60 * 60), days: s % (7 * 24 * 60 * 60) / (24 * 60 * 60))
     end
   end
 end
