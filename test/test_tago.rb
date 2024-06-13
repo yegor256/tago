@@ -31,8 +31,9 @@ class TestTago < Minitest::Test
   def test_simple_printing
     t = Time.now
     assert_equal('14ms', (t - 0.014).ago(t))
-    assert_equal('1.0s', (t - 1).ago(t))
-    assert_equal('1.1m', (t - 67).ago(t))
+    assert_equal('1.00s', (t - 1).ago(t))
+    assert_equal('67s', (t - 67).ago(t))
+    assert_equal('4.1m', (t - 245).ago(t))
     assert_equal('13.0h', (t - (13 * 60 * 60)).ago(t))
     assert_equal('5.0d', (t - (5 * 24 * 60 * 60)).ago(t))
     assert_equal('22.1w', (t - (155 * 24 * 60 * 60)).ago(t))
@@ -41,8 +42,8 @@ class TestTago < Minitest::Test
   def test_inverse
     t = Time.now
     assert_equal('14ms', (t + 0.014).ago(t))
-    assert_equal('1.0s', (t + 1).ago(t))
-    assert_equal('1.1m', (t + 67).ago(t))
+    assert_equal('1.00s', (t + 1).ago(t))
+    assert_equal('67s', (t + 67).ago(t))
     assert_equal('13.0h', (t + (13 * 60 * 60)).ago(t))
     assert_equal('5.0d', (t + (5 * 24 * 60 * 60)).ago(t))
     assert_equal('22.1w', (t + (155 * 24 * 60 * 60)).ago(t))

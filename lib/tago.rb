@@ -35,8 +35,10 @@ class Time
       format('%dμs', s * 1000 * 1000)
     elsif s < 1
       format('%dms', s * 1000)
-    elsif s < 60
-      format('%.1fs', s)
+    elsif s < 10
+      format('%.2fs', s)
+    elsif s < 100
+      format('%ds', s)
     elsif s < 60 * 60
       format('%.1fm', s / 60)
     elsif s < 24 * 60 * 60
