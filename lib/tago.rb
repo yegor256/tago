@@ -5,7 +5,7 @@
 
 require 'time'
 
-# A new methosto print time as text.
+# A new method to print time as text.
 #
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
