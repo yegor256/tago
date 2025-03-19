@@ -11,6 +11,12 @@
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/tago)](https://hitsofcode.com/view/github/yegor256/tago)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/tago/blob/master/LICENSE.txt)
 
+First, install it:
+
+```bash
+gem install tago
+```
+
 Here is how you use it:
 
 ```ruby
@@ -18,6 +24,15 @@ start = Time.now
 # something long
 puts "It took #{start.ago} to do it"
 ```
+
+It's also possible to convert Float seconds to text:
+
+```ruby
+s = Time.now - start
+puts "It took #{s.seconds}"
+```
+
+The gem basically extends the `Float` and `Time` classes with new methods.
 
 ## How to contribute
 
