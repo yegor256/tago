@@ -10,9 +10,9 @@ require 'time'
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
-class Time
-  def ago(now = Time.now)
-    s = now - self
+class Float
+  def seconds
+    s = self
     s = -s if s.negative?
     if s < 0.001
       format('%dμs', s * 1000 * 1000)
@@ -36,5 +36,16 @@ class Time
     else
       format('%<weeks>dw%<days>dd', weeks: s / (7 * 24 * 60 * 60), days: s % (7 * 24 * 60 * 60) / (24 * 60 * 60))
     end
+  end
+end
+
+# A new method to print time as text.
+#
+# Author:: Yegor Bugayenko (yegor256@gmail.com)
+# Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
+# License:: MIT
+class Time
+  def ago(now = Time.now)
+    (now - self).seconds
   end
 end

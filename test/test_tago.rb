@@ -33,4 +33,13 @@ class TestTago < Minitest::Test
     assert_equal('5d0h', (t + (5 * 24 * 60 * 60)).ago(t))
     assert_equal('22w1d', (t + (155 * 24 * 60 * 60)).ago(t))
   end
+
+  def test_float_to_seconds
+    assert_equal('18ms', 0.018.seconds)
+    assert_equal('2s330ms', 2.33.seconds)
+    assert_equal('69s', 69.17.seconds)
+    assert_equal('12h6m', (12.1 * 60 * 60).seconds)
+    assert_equal('5d7h', (5.3 * 24 * 60 * 60).seconds)
+    assert_equal('19w0d', ((132.6 * 24 * 60 * 60) + (23 * 60 * 60)).seconds)
+  end
 end
