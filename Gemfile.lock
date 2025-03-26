@@ -22,7 +22,7 @@ GEM
     rake (13.2.1)
     regexp_parser (2.10.0)
     rexml (3.4.1)
-    rubocop (1.75.0)
+    rubocop (1.75.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -76,7 +76,7 @@ PLATFORMS
 DEPENDENCIES
   minitest (~> 5.24)
   rake (~> 13.2)
-  rubocop (= 1.75.0)
+  rubocop (= 1.75.1)
   rubocop-minitest (> 0)
   rubocop-performance (> 0)
   rubocop-rake (> 0)
