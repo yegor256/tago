@@ -76,7 +76,7 @@ PLATFORMS
 DEPENDENCIES
   minitest (~> 5.24)
   rake (~> 13.2)
-  rubocop (= 1.75.1)
+  rubocop (~> 1.75)
   rubocop-minitest (> 0)
   rubocop-performance (> 0)
   rubocop-rake (> 0)
