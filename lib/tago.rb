@@ -19,24 +19,26 @@ class Float
     elsif s < 1
       format('%dms', s * 1000)
     elsif s < 10
-      ms = format('%03d', s * 1000 % 1000)
-      if ms == '000'
-        format('%ds', s)
-      else
-        format('%<sec>ds%<msec>sms', sec: s, msec: ms)
-      end
+      ms = (s * 1000 % 1000).to_i
+      ms.zero? ? format('%ds', s) : format('%<s>ds%<ms>dms', s:, ms:)
     elsif s < 100
       format('%ds', s)
     elsif s < 60 * 60
-      format('%<mins>dm%<secs>ds', mins: s / 60, secs: s % 60)
+      mins = (s / 60).to_i
+      secs = (s % 60).to_i
+      secs.zero? ? format('%dm', mins) : format('%<mins>dm%<secs>ds', mins:, secs:)
     elsif s < 24 * 60 * 60
-      format('%<hours>dh%<mins>dm', hours: s / (60 * 60), mins: (s % (60 * 60)) / 60)
+      hours = (s / (60 * 60)).to_i
+      mins = ((s % (60 * 60)) / 60).to_i
+      mins.zero? ? format('%dh', hours) : format('%<hours>dh%<mins>dm', hours:, mins:)
     elsif s < 7 * 24 * 60 * 60
-      format('%<days>dd%<hours>dh', days: s / (24 * 60 * 60), hours: (s % (24 * 60 * 60)) / (60 * 60))
+      days = (s / (24 * 60 * 60)).to_i
+      hours = ((s % (24 * 60 * 60)) / (60 * 60)).to_i
+      hours.zero? ? format('%dd', days) : format('%<days>dd%<hours>dh', days:, hours:)
     else
-      weeks = s / (7 * 24 * 60 * 60)
-      days = s / (24 * 60 * 60) % 7
-      days.to_i.zero? ? format('%dw', weeks) : format('%<weeks>dw%<days>dd', weeks:, days:)
+      weeks = (s / (7 * 24 * 60 * 60)).to_i
+      days = (s / (24 * 60 * 60) % 7).to_i
+      days.zero? ? format('%dw', weeks) : format('%<weeks>dw%<days>dd', weeks:, days:)
     end
   end
 end
