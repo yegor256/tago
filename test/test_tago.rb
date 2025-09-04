@@ -40,6 +40,6 @@ class TestTago < Minitest::Test
     assert_equal('69s', 69.17.seconds)
     assert_equal('12h6m', (12.1 * 60 * 60).seconds)
     assert_equal('5d7h', (5.3 * 24 * 60 * 60).seconds)
-    assert_equal('19w0d', ((132.6 * 24 * 60 * 60) + (23 * 60 * 60)).seconds)
+    assert_equal('19w', ((132.6 * 24 * 60 * 60) + (23 * 60 * 60)).seconds)
   end
 end

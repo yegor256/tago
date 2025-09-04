@@ -34,7 +34,9 @@ class Float
     elsif s < 7 * 24 * 60 * 60
       format('%<days>dd%<hours>dh', days: s / (24 * 60 * 60), hours: (s % (24 * 60 * 60)) / (60 * 60))
     else
-      format('%<weeks>dw%<days>dd', weeks: s / (7 * 24 * 60 * 60), days: s % (7 * 24 * 60 * 60) / (24 * 60 * 60))
+      weeks = s / (7 * 24 * 60 * 60)
+      days = s / (24 * 60 * 60) % 7
+      days.to_i.zero? ? format('%dw', weeks) : format('%<weeks>dw%<days>dd', weeks:, days:)
     end
   end
 end
