@@ -57,4 +57,37 @@ class TestTago < Minitest::Test
     assert_equal('2w1d', (15.5 * 24 * 60 * 60).seconds)
     assert_equal('19w', ((132.6 * 24 * 60 * 60) + (23 * 60 * 60)).seconds)
   end
+
+  def test_round_formatting
+    # Milliseconds range (< 1s)
+    assert_equal('500ms', 0.5.seconds(:round))
+
+    # Seconds with milliseconds (< 10s)
+    assert_equal('9s', 9.444.seconds(:round))
+    assert_equal('9s444ms', 9.444.seconds)
+
+    # Seconds (10-100s)
+    assert_equal('45s', 45.5.seconds(:round))
+
+    # Minutes and seconds
+    assert_equal('3m', 184.0.seconds(:round))
+    assert_equal('3m4s', 184.0.seconds)
+
+    # Hours and minutes
+    assert_equal('1h', 3661.0.seconds(:round))
+    assert_equal('1h1m', 3661.0.seconds)
+
+    # Days and hours
+    assert_equal('1d', 90_000.0.seconds(:round))
+    assert_equal('1d1h', 90_000.0.seconds)
+
+    # Weeks and days
+    assert_equal('1w', 691_200.0.seconds(:round))
+    assert_equal('1w1d', 691_200.0.seconds)
+
+    # Edge case: exact boundaries
+    assert_equal('1h', 3600.0.seconds(:round))
+    assert_equal('1d', 86_400.0.seconds(:round))
+    assert_equal('1w', 604_800.0.seconds(:round))
+  end
 end
