@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 require 'time'
+require_relative 'locales/en'
 
 # A new method to print time as text.
 #
@@ -14,6 +15,34 @@ class Float
   def seconds(format = nil)
     s = self
     s = -s if s.negative?
+    if format == :pretty
+      if s < 0.001
+        val = (s * 1_000_000).to_i
+        unit = :microsecond
+      elsif s < 1
+        val = (s * 1000).to_i
+        unit = :millisecond
+      elsif s < 60
+        val = s.to_i
+        unit = :second
+      elsif s < 60 * 60
+        val = (s / 60).to_i
+        unit = :minute
+      elsif s < 24 * 60 * 60
+        val = (s / (60 * 60)).to_i
+        unit = :hour
+      elsif s < 7 * 24 * 60 * 60
+        val = (s / (24 * 60 * 60)).to_i
+        unit = :day
+      else
+        val = (s / (7 * 24 * 60 * 60)).to_i
+        unit = :week
+      end
+      num = Locales::EN.number_to_words(val)
+      unit_name = Locales::EN.unit_name(unit, val)
+      return format('%<num>s %<unit_name>s', num:, unit_name:)
+    end
+
     if s < 0.001
       format('%dμs', s * 1000 * 1000)
     elsif s < 1
@@ -69,7 +98,15 @@ end
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
 class Time
-  def ago(now = Time.now)
-    (now - self).seconds
+  def ago(arg = Time.now, pretty = nil)
+    if arg.is_a?(Symbol) || arg.nil?
+      format = arg
+      now = pretty || Time.now
+    else
+      now = arg
+      format = pretty
+    end
+
+    (now - self).seconds(format)
   end
 end
