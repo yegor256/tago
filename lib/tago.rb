@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 require 'time'
-require_relative 'locales/en'
 
 # A new method to print time as text.
 #
@@ -12,6 +11,30 @@ require_relative 'locales/en'
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
 class Float
+  def t(locale = :en)
+    locals = {
+      en: {
+        numbers: { 0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
+                   7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
+        units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
+                 second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
+                 week: %w[week weeks] }
+      }
+    }.freeze
+    locals[locale]
+  end
+
+  def number_to_words(value)
+    return t(:en)[:numbers][value] if value <= 10
+
+    value.to_s
+  end
+
+  def unit_name(unit_symbol, value)
+    names = t(:en)[:units].fetch(unit_symbol)
+    value == 1 ? names[0] : names[1]
+  end
+
   def seconds(format = nil)
     s = self
     s = -s if s.negative?
@@ -38,8 +61,8 @@ class Float
         val = (s / (7 * 24 * 60 * 60)).to_i
         unit = :week
       end
-      num = Locales::EN.number_to_words(val)
-      unit_name = Locales::EN.unit_name(unit, val)
+      num = number_to_words(val)
+      unit_name = unit_name(unit, val)
       return format('%<num>s %<unit_name>s', num:, unit_name:)
     end
 
