@@ -11,30 +11,6 @@ require 'time'
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
 class Float
-  def t(locale = :en)
-    locals = {
-      en: {
-        numbers: { 0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
-                   7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
-        units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
-                 second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
-                 week: %w[week weeks] }
-      }
-    }.freeze
-    locals[locale]
-  end
-
-  def number_to_words(value)
-    return t(:en)[:numbers][value] if value <= 10
-
-    value.to_s
-  end
-
-  def unit_name(unit_symbol, value)
-    names = t(:en)[:units].fetch(unit_symbol)
-    value == 1 ? names[0] : names[1]
-  end
-
   def seconds(format = nil)
     s = self
     s = -s if s.negative?
@@ -61,8 +37,9 @@ class Float
         val = (s / (7 * 24 * 60 * 60)).to_i
         unit = :week
       end
-      num = number_to_words(val)
-      unit_name = unit_name(unit, val)
+
+      num = Translate.number_to_words(val)
+      unit_name = Translate.unit_name(unit, val)
       return format('%<num>s %<unit_name>s', num:, unit_name:)
     end
 
@@ -111,6 +88,36 @@ class Float
       else
         format('%<weeks>dw%<days>dd', weeks:, days:)
       end
+    end
+  end
+end
+
+# A new class to translate numbers to words.
+#
+# Author:: Ramzi Hemadou (ramzihemadou@gmail.com)
+# Copyright:: Copyright (c) 2025-2026 Ramzi Hemadou
+# License:: MIT
+class Translate
+  LOCALES = {
+    en: {
+      numbers: { 0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
+                 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
+      units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
+               second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
+               week: %w[week weeks] }
+    }
+  }.freeze
+
+  class << self
+    def number_to_words(value, locale = :en)
+      return LOCALES[locale][:numbers][value] if value <= 10
+
+      value.to_s
+    end
+
+    def unit_name(unit_symbol, value, locale = :en)
+      names = LOCALES[locale][:units].fetch(unit_symbol)
+      value == 1 ? names[0] : names[1]
     end
   end
 end
