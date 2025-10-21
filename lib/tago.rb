@@ -15,6 +15,16 @@ class Float
     s = self
     s = -s if s.negative?
     if format == :pretty
+      locales = {
+        en: {
+          numbers: { 0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
+                     7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
+          units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
+                   second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
+                   week: %w[week weeks] }
+        }
+      }.freeze
+
       if s < 0.001
         val = (s * 1_000_000).to_i
         unit = :microsecond
@@ -38,8 +48,9 @@ class Float
         unit = :week
       end
 
-      num = Translate.number_to_words(val)
-      unit_name = Translate.unit_name(unit, val)
+      num = val < 10 ? locales[:en][:numbers][val] : val.to_s
+      names = locales[:en][:units].fetch(unit)
+      unit_name = val == 1 ? names[0] : names[1]
       return format('%<num>s %<unit_name>s', num:, unit_name:)
     end
 
@@ -88,36 +99,6 @@ class Float
       else
         format('%<weeks>dw%<days>dd', weeks:, days:)
       end
-    end
-  end
-end
-
-# A new class to translate numbers to words.
-#
-# Author:: Ramzi Hemadou (ramzihemadou@gmail.com)
-# Copyright:: Copyright (c) 2025-2026 Ramzi Hemadou
-# License:: MIT
-class Translate
-  LOCALES = {
-    en: {
-      numbers: { 0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six',
-                 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
-      units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
-               second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
-               week: %w[week weeks] }
-    }
-  }.freeze
-
-  class << self
-    def number_to_words(value, locale = :en)
-      return LOCALES[locale][:numbers][value] if value <= 10
-
-      value.to_s
-    end
-
-    def unit_name(unit_symbol, value, locale = :en)
-      names = LOCALES[locale][:units].fetch(unit_symbol)
-      value == 1 ? names[0] : names[1]
     end
   end
 end
