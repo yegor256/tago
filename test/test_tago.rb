@@ -90,4 +90,12 @@ class TestTago < Minitest::Test
     assert_equal('1d', 86_400.0.seconds(:round))
     assert_equal('1w', 604_800.0.seconds(:round))
   end
+
+  def test_pretty_formatting
+    t = Time.now
+    assert_equal('45 seconds', (t - 45.6).ago(:pretty))
+    five_weeks_three_days = (5 * 7 * 24 * 60 * 60) + (3 * 24 * 60 * 60)
+    assert_equal('five weeks', (t - five_weeks_three_days).ago(:pretty))
+    assert_equal('45 seconds', 45.6.seconds(:pretty))
+  end
 end
