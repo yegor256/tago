@@ -98,4 +98,24 @@ class TestTago < Minitest::Test
     assert_equal('five weeks', (t - five_weeks_three_days).ago(:pretty))
     assert_equal('45 seconds', 45.6.seconds(:pretty))
   end
+
+  def test_short_formatting
+    t = Time.now
+    assert_equal('5m', (t - 300).ago(:short))
+    assert_equal('5m', 300.0.seconds(:short))
+    assert_equal('1h', 3600.0.seconds(:short))
+  end
+
+  def test_pretty_short_formatting
+    t = Time.now
+    assert_equal('5 min', (t - 300).ago(:pretty, :short))
+    assert_equal('5 min', 300.0.seconds(:pretty, :short))
+    assert_equal('1 hr', 3600.0.seconds(:pretty, :short))
+  end
+
+  def test_ago_with_time_and_flags
+    t = Time.now
+    assert_equal('5 min', (t - 300).ago(t, :pretty, :short))
+    assert_equal('5m', (t - 300).ago(t, :short))
+  end
 end

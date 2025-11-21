@@ -12,10 +12,10 @@ require_relative 'locales/en'
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
 class Float
-  def seconds(format = nil)
+  def seconds(*args)
     s = self
     s = -s if s.negative?
-    if format == :pretty
+    if args.include?(:pretty)
       if s < 0.001
         val = (s * 1_000_000).to_i
         unit = :microsecond
@@ -38,8 +38,9 @@ class Float
         val = (s / (7 * 24 * 60 * 60)).to_i
         unit = :week
       end
-      num = Locales::EN.number_to_words(val)
-      unit_name = Locales::EN.unit_name(unit, val)
+      short = args.include?(:short)
+      num = short ? val : Locales::EN.number_to_words(val)
+      unit_name = Locales::EN.unit_name(unit, val, short:)
       return format('%<num>s %<unit_name>s', num:, unit_name:)
     end
 
@@ -49,7 +50,7 @@ class Float
       format('%dms', s * 1000)
     elsif s < 10
       ms = (s * 1000 % 1000).to_i
-      if format == :round || ms.zero?
+      if args.include?(:round) || args.include?(:short) || ms.zero?
         format('%ds', s)
       else
         format('%<s>ds%<ms>dms', s:, ms:)
@@ -59,7 +60,7 @@ class Float
     elsif s < 60 * 60
       mins = (s / 60).to_i
       secs = (s % 60).to_i
-      if format == :round || secs.zero?
+      if args.include?(:round) || args.include?(:short) || secs.zero?
         format('%dm', mins)
       else
         format('%<mins>dm%<secs>ds', mins:, secs:)
@@ -67,7 +68,7 @@ class Float
     elsif s < 24 * 60 * 60
       hours = (s / (60 * 60)).to_i
       mins = ((s % (60 * 60)) / 60).to_i
-      if format == :round || mins.zero?
+      if args.include?(:round) || args.include?(:short) || mins.zero?
         format('%dh', hours)
       else
         format('%<hours>dh%<mins>dm', hours:, mins:)
@@ -75,7 +76,7 @@ class Float
     elsif s < 7 * 24 * 60 * 60
       days = (s / (24 * 60 * 60)).to_i
       hours = ((s % (24 * 60 * 60)) / (60 * 60)).to_i
-      if format == :round || hours.zero?
+      if args.include?(:round) || args.include?(:short) || hours.zero?
         format('%dd', days)
       else
         format('%<days>dd%<hours>dh', days:, hours:)
@@ -83,7 +84,7 @@ class Float
     else
       weeks = (s / (7 * 24 * 60 * 60)).to_i
       days = (s / (24 * 60 * 60) % 7).to_i
-      if format == :round || days.zero?
+      if args.include?(:round) || args.include?(:short) || days.zero?
         format('%dw', weeks)
       else
         format('%<weeks>dw%<days>dd', weeks:, days:)
@@ -98,15 +99,13 @@ end
 # Copyright:: Copyright (c) 2024-2025 Yegor Bugayenko
 # License:: MIT
 class Time
-  def ago(arg = Time.now, pretty = nil)
-    if arg.is_a?(Symbol) || arg.nil?
-      format = arg
-      now = pretty || Time.now
-    else
+  def ago(arg = Time.now, *options)
+    if arg.is_a?(Time)
       now = arg
-      format = pretty
+    else
+      now = Time.now
+      options = [arg] + options
     end
-
-    (now - self).seconds(format)
+    (now - self).seconds(*options)
   end
 end

@@ -27,6 +27,16 @@ module Locales
       week: %w[week weeks]
     }.freeze
 
+    SHORT_UNITS = {
+      microsecond: 'μs',
+      millisecond: 'ms',
+      second: 'sec',
+      minute: 'min',
+      hour: 'hr',
+      day: 'd',
+      week: 'wk'
+    }.freeze
+
     module_function
 
     def number_to_words(value)
@@ -35,7 +45,9 @@ module Locales
       value.to_s
     end
 
-    def unit_name(unit_symbol, value)
+    def unit_name(unit_symbol, value, short: false)
+      return SHORT_UNITS.fetch(unit_symbol) if short
+
       names = UNITS.fetch(unit_symbol)
       value == 1 ? names[0] : names[1]
     end
