@@ -4,62 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 require 'time'
-
-# Helper module for time formatting.
-module TimeFormatter
-  NUMBERS = {
-    0 => 'zero', 1 => 'one', 2 => 'two', 3 => 'three', 4 => 'four',
-    5 => 'five', 6 => 'six', 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten'
-  }.freeze
-
-  SHORT_UNITS = {
-    microsecond: 'μs', millisecond: 'ms', second: 'sec', minute: 'min',
-    hour: 'hr', day: 'd', week: 'wk'
-  }.freeze
-
-  UNITS = {
-    microsecond: %w[microsecond microseconds],
-    millisecond: %w[millisecond milliseconds],
-    second: %w[second seconds],
-    minute: %w[minute minutes],
-    hour: %w[hour hours],
-    day: %w[day days],
-    week: %w[week weeks]
-  }.freeze
-
-  module_function
-
-  def number_to_words(value)
-    return NUMBERS[value] if value <= 10
-
-    value.to_s
-  end
-
-  def unit_name(unit_symbol, value, short: false)
-    return SHORT_UNITS.fetch(unit_symbol) if short
-
-    names = UNITS.fetch(unit_symbol)
-    value == 1 ? names[0] : names[1]
-  end
-
-  def calculate_time_unit(sec)
-    if sec < 0.001
-      [(sec * 1_000_000).to_i, :microsecond]
-    elsif sec < 1
-      [(sec * 1000).to_i, :millisecond]
-    elsif sec < 60
-      [sec.to_i, :second]
-    elsif sec < 60 * 60
-      [(sec / 60).to_i, :minute]
-    elsif sec < 24 * 60 * 60
-      [(sec / (60 * 60)).to_i, :hour]
-    elsif sec < 7 * 24 * 60 * 60
-      [(sec / (24 * 60 * 60)).to_i, :day]
-    else
-      [(sec / (7 * 24 * 60 * 60)).to_i, :week]
-    end
-  end
-end
+require_relative 'locales/en'
 
 # A new method to print time as text.
 #
@@ -71,10 +16,31 @@ class Float
     s = self
     s = -s if s.negative?
     if args.include?(:pretty)
-      val, unit = TimeFormatter.calculate_time_unit(s)
+      if s < 0.001
+        val = (s * 1_000_000).to_i
+        unit = :microsecond
+      elsif s < 1
+        val = (s * 1000).to_i
+        unit = :millisecond
+      elsif s < 60
+        val = s.to_i
+        unit = :second
+      elsif s < 60 * 60
+        val = (s / 60).to_i
+        unit = :minute
+      elsif s < 24 * 60 * 60
+        val = (s / (60 * 60)).to_i
+        unit = :hour
+      elsif s < 7 * 24 * 60 * 60
+        val = (s / (24 * 60 * 60)).to_i
+        unit = :day
+      else
+        val = (s / (7 * 24 * 60 * 60)).to_i
+        unit = :week
+      end
       short = args.include?(:short)
-      num = short ? val : TimeFormatter.number_to_words(val)
-      unit_name = TimeFormatter.unit_name(unit, val, short:)
+      num = short ? val : Locales::EN.number_to_words(val)
+      unit_name = Locales::EN.unit_name(unit, val, short:)
       return format('%<num>s %<unit_name>s', num:, unit_name:)
     end
 
