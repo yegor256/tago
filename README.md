@@ -32,6 +32,24 @@ s = Time.now - start
 puts "It took #{s.seconds}"
 ```
 
+The `seconds` method accepts optional formatting flags:
+
+```ruby
+9.444.seconds           # => "9s444ms"
+9.444.seconds(:round)   # => "9s" (omits sub-units)
+9.444.seconds(:short)   # => "9s" (also omits sub-units)
+300.0.seconds(:pretty)  # => "five minutes" (words instead of abbreviations)
+300.0.seconds(:pretty, :short) # => "5 min" (numeric with short unit names)
+```
+
+The same flags work with `ago`:
+
+```ruby
+start.ago(:round)
+start.ago(:pretty, :short)
+start.ago(Time.now, :round)
+```
+
 The gem basically extends the `Float` and `Time` classes with new methods.
 
 ## How to contribute
