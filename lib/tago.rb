@@ -56,7 +56,8 @@ class Float
       names = locales[:en][:units][unit]
       unit_symbol = val == 1 ? names[0] : names[1]
       unit_name = short ? locales[:en][:short_units][unit] : unit_symbol
-      return format('%<num>s %<unit_name>s', num:, unit_name:)
+      result = format('%<num>s %<unit_name>s', num:, unit_name:)
+      return args.include?(:caps) ? result.capitalize : result
     end
 
     if s < 0.001

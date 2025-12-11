@@ -40,13 +40,16 @@ The `seconds` method accepts optional formatting flags:
 9.444.seconds(:short)   # => "9s" (also omits sub-units)
 300.0.seconds(:pretty)  # => "five minutes" (words instead of abbreviations)
 300.0.seconds(:pretty, :short) # => "5 min" (numeric with short unit names)
+5.0.seconds(:pretty, :caps)    # => "Five seconds" (capitalizes first letter)
 ```
 
 The same flags work with `ago`:
 
 ```ruby
 start.ago(:round)
+start.ago(:pretty)
 start.ago(:pretty, :short)
+start.ago(:pretty, :caps)
 start.ago(Time.now, :round)
 ```
 

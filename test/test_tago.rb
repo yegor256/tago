@@ -118,4 +118,22 @@ class TestTago < Minitest::Test
     assert_equal('5 min', (t - 300).ago(t, :pretty, :short))
     assert_equal('5m', (t - 300).ago(t, :short))
   end
+
+  def test_caps_formatting
+    t = Time.now
+    assert_equal('Five seconds', (t - 5).ago(:pretty, :caps))
+    assert_equal('Three minutes', 180.0.seconds(:pretty, :caps))
+    assert_equal('Two hours', (t - 7200).ago(:pretty, :caps))
+  end
+
+  def test_caps_with_short
+    assert_equal('5 sec', 5.0.seconds(:pretty, :short, :caps))
+    assert_equal('3 min', 180.0.seconds(:pretty, :short, :caps))
+  end
+
+  def test_caps_with_time_parameter
+    t = Time.now
+    assert_equal('Five seconds', (t - 5).ago(t, :pretty, :caps))
+    assert_equal('Three minutes', (t - 180).ago(t, :pretty, :caps))
+  end
 end
