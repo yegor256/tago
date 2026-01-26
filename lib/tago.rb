@@ -21,9 +21,10 @@ class Float
                      7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten' },
           units: { microsecond: %w[microsecond microseconds], millisecond: %w[millisecond milliseconds],
                    second: %w[second seconds], minute: %w[minute minutes], hour: %w[hour hours], day: %w[day days],
-                   week: %w[week weeks] },
+                   week: %w[week weeks], month: %w[month months], year: %w[year years] },
           short_units: {
-            microsecond: 'μs', millisecond: 'ms', second: 'sec', minute: 'min', hour: 'hr', day: 'd', week: 'wk'
+            microsecond: 'μs', millisecond: 'ms', second: 'sec', minute: 'min', hour: 'hr', day: 'd', week: 'wk',
+            month: 'mo', year: 'y'
           }
         }
       }.freeze
@@ -46,9 +47,15 @@ class Float
       elsif s < 7 * 24 * 60 * 60
         val = (s / (24 * 60 * 60)).to_i
         unit = :day
-      else
+      elsif s < 30 * 24 * 60 * 60
         val = (s / (7 * 24 * 60 * 60)).to_i
         unit = :week
+      elsif s < 365 * 24 * 60 * 60
+        val = (s / (30 * 24 * 60 * 60)).to_i
+        unit = :month
+      else
+        val = (s / (365 * 24 * 60 * 60)).to_i
+        unit = :year
       end
       short = args.include?(:short)
       number_to_words = val <= 10 ? locales[:en][:numbers][val] : val.to_s
@@ -97,13 +104,29 @@ class Float
       else
         format('%<days>dd%<hours>dh', days:, hours:)
       end
-    else
+    elsif s < 30 * 24 * 60 * 60
       weeks = (s / (7 * 24 * 60 * 60)).to_i
       days = (s / (24 * 60 * 60) % 7).to_i
       if args.include?(:round) || args.include?(:short) || days.zero?
         format('%dw', weeks)
       else
         format('%<weeks>dw%<days>dd', weeks:, days:)
+      end
+    elsif s < 365 * 24 * 60 * 60
+      months = (s / (30 * 24 * 60 * 60)).to_i
+      weeks = ((s % (30 * 24 * 60 * 60)) / (7 * 24 * 60 * 60)).to_i
+      if args.include?(:round) || args.include?(:short) || weeks.zero?
+        format('%dmo', months)
+      else
+        format('%<months>dmo%<weeks>dw', months:, weeks:)
+      end
+    else
+      years = (s / (365 * 24 * 60 * 60)).to_i
+      months = ((s % (365 * 24 * 60 * 60)) / (30 * 24 * 60 * 60)).to_i
+      if args.include?(:round) || args.include?(:short) || months.zero?
+        format('%dy', years)
+      else
+        format('%<years>dy%<months>dmo', years:, months:)
       end
     end
   end
