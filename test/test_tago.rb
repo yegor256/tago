@@ -73,41 +73,22 @@ class TestTago < Minitest::Test
   end
 
   def test_round_formatting
-    # Milliseconds range (< 1s)
     assert_equal('500ms', 0.5.seconds(:round))
-
-    # Seconds with milliseconds (< 10s)
     assert_equal('9s', 9.444.seconds(:round))
     assert_equal('9s444ms', 9.444.seconds)
-
-    # Seconds (10-100s)
     assert_equal('45s', 45.5.seconds(:round))
-
-    # Minutes and seconds
     assert_equal('3m', 184.0.seconds(:round))
     assert_equal('3m4s', 184.0.seconds)
-
-    # Hours and minutes
     assert_equal('1h', 3661.0.seconds(:round))
     assert_equal('1h1m', 3661.0.seconds)
-
-    # Days and hours
     assert_equal('1d', 90_000.0.seconds(:round))
     assert_equal('1d1h', 90_000.0.seconds)
-
-    # Weeks and days
     assert_equal('1w', 691_200.0.seconds(:round))
     assert_equal('1w1d', 691_200.0.seconds)
-
-    # Months and weeks
     assert_equal('3mo', (100.0 * 24 * 60 * 60).seconds(:round))
     assert_equal('3mo1w', (100.0 * 24 * 60 * 60).seconds)
-
-    # Years and months
     assert_equal('2y', (730.0 * 24 * 60 * 60).seconds(:round))
     assert_equal('3y', (1095.0 * 24 * 60 * 60).seconds)
-
-    # Edge case: exact boundaries
     assert_equal('1h', 3600.0.seconds(:round))
     assert_equal('1d', 86_400.0.seconds(:round))
     assert_equal('1w', 604_800.0.seconds(:round))
@@ -118,8 +99,7 @@ class TestTago < Minitest::Test
   def test_pretty_formatting
     t = Time.now
     assert_equal('45 seconds', (t - 45.6).ago(:pretty))
-    five_weeks_three_days = (5.0 * 7 * 24 * 60 * 60) + (3.0 * 24 * 60 * 60)
-    assert_equal('one month', (t - five_weeks_three_days).ago(:pretty))
+    assert_equal('one month', (t - ((5.0 * 7 * 24 * 60 * 60) + (3.0 * 24 * 60 * 60))).ago(:pretty))
     assert_equal('45 seconds', 45.6.seconds(:pretty))
     assert_equal('six months', (180.0 * 24 * 60 * 60).seconds(:pretty))
     assert_equal('one year', (455.0 * 24 * 60 * 60).seconds(:pretty))
@@ -129,8 +109,7 @@ class TestTago < Minitest::Test
   end
 
   def test_short_formatting
-    t = Time.now
-    assert_equal('5m', (t - 300).ago(:short))
+    assert_equal('5m', (Time.now - 300).ago(:short))
     assert_equal('5m', 300.0.seconds(:short))
     assert_equal('1h', 3600.0.seconds(:short))
     assert_equal('3mo', (95.0 * 24 * 60 * 60).seconds(:short))
@@ -139,8 +118,7 @@ class TestTago < Minitest::Test
   end
 
   def test_pretty_short_formatting
-    t = Time.now
-    assert_equal('5 min', (t - 300).ago(:pretty, :short))
+    assert_equal('5 min', (Time.now - 300).ago(:pretty, :short))
     assert_equal('5 min', 300.0.seconds(:pretty, :short))
     assert_equal('1 hr', 3600.0.seconds(:pretty, :short))
     assert_equal('6 mo', (180.0 * 24 * 60 * 60).seconds(:pretty, :short))
